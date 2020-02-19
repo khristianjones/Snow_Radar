@@ -14,7 +14,7 @@ zs = [zs(1) zs(midSamp) zs(end)];
 % plot markers at sensor positions, aimpoint (origin),
 % and true target position
 plot(0,0,'rp')
-plot(xt,yt,'ks','markersize',10,'linewidth',2)
+plot(xt,yt,'ms','markersize',10,'linewidth',2)
 % plot(xs,ys,'o')
 for ii = 1:3, % loop over sensor coordinates
 h = plot(xs(ii),ys(ii),'o');

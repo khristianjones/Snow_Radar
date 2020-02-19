@@ -29,20 +29,20 @@ wpts = [b' x_loc' y_loc' z_loc'];
 platform = phased.Platform('MotionModel','Custom',...
     'CustomTrajectory', wpts);
 
-plot3(x_loc, y_loc, z_loc)
+plot(x_loc, y_loc, z_loc)
 speed = 100;  
 flightDuration = 4;
 radarPlatform  = phased.Platform('InitialPosition', [0;-200;500], 'Velocity', [0; speed; 0]);
 slowTime = 1/prf;
 numpulses = flightDuration/slowTime +1;
 
-maxRange = 10;
-truncrangesamples = 676;
+maxRange = 2500;
+truncrangesamples = ceil((2*maxRange/c)*fs);
 fastTime = (0:1/fs:(truncrangesamples-1)/fs);
 % Set the reference range for the cross-range processing.
 Rc = 25;
 
-antenna = phased.CosineAntennaElement('FrequencyRange', [1e9 12e9]);
+antenna = phased.CosineAntennaElement('FrequencyRange', [1e9 6e9]);
 antennaGain = aperture2gain(aperture,c/fc); 
 
 transmitter = phased.Transmitter('PeakPower', 50e3, 'Gain', antennaGain);
@@ -66,7 +66,6 @@ figure(2);h = axes;plot(targetpos(2,1),targetpos(1,1),'*g');hold all;plot(target
 set(h,'Ydir','reverse');xlim([-10 10]);ylim([-10 10]);
 title('Ground Truth');ylabel('Range');xlabel('Cross-Range');
 
-numpulses = 1536;
 % Define the broadside angle
 refangle = zeros(1,size(targetpos,2));
 rxsig = zeros(truncrangesamples,numpulses);
