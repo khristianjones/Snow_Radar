@@ -71,8 +71,7 @@ pointTargets = phased.Platform('InitialPosition', targetpos,'Velocity',targetvel
 figure(1);
 h = axes;
 plot(targetpos(2,1),targetpos(1,1),'*g');
-hold on;
-plot(targetpos(2,2),targetpos(1,2),'*r');
+plot(targetpos(2,2),targetpos(1,2),'*r'
 set(h,'Ydir','reverse');
 title('Ground Truth');ylabel('Range');xlabel('Cross-Range');
 hold on;
@@ -122,12 +121,5 @@ imagesc(abs(rxsig));title('SAR Raw Data')
 xlabel('Cross-Range Samples')
 ylabel('Range Samples')
 
-pulseCompression = phased.RangeResponse('RangeMethod', 'Matched filter', 'PropagationSpeed', c, 'SampleRate', fs);
-matchingCoeff = getMatchedFilter(waveform);
-[cdata, rnggrid] = pulseCompression(rxsig, matchingCoeff);
-
-imagesc(real(cdata));title('SAR Range Compressed Data')
-xlabel('Cross-Range Samples')
-ylabel('Range Samples')
 
 
