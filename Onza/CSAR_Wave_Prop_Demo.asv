@@ -33,9 +33,9 @@ platform = phased.Platform('MotionModel','Custom',...
 plot3(x_loc, y_loc, z_loc)
 speed = 100;  
 flightDuration = 4;
-
+radarPlatform  = phased.Platform('InitialPosition', [0;-200;500], 'Velocity', [0; speed; 0]);
 slowTime = 1/prf;
-
+numpulses = flightDuration/slowTime +1;
 
 maxRange = 10;
 truncrangesamples = 676;
@@ -55,7 +55,7 @@ receiver = phased.ReceiverPreamp('SampleRate', fs, 'NoiseFigure', 30);
 channel = phased.FreeSpace('PropagationSpeed', c, 'OperatingFrequency', fc,'SampleRate', fs,...
     'TwoWayPropagation', true);
 
-targetpos= [.5,.5,0;.1,.1,0; 0,0,0]'; 
+targetpos= [0,0,0;0,0,0; 0,0,0]'; 
 
 targetvel = [0,0,0;0,0,0; 0,0,0]';
 
