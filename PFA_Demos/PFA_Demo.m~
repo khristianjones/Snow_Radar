@@ -14,9 +14,8 @@ sensor.BW = 8e8;
 % Bandwidth (Hz)
 sensor.Fc = 10e9;
 % Center freq (Hz)
-sensor.int_angle = 360;
+sensor.int_angle = 180;
 % Integration Angle (degrees)
-
 sensor.cent_angle = 0;
 % Center Angle (degrees)
 sensor.elev = 0;
@@ -35,7 +34,7 @@ dTheta = (pi/180)*sensor.int_angle; % integration angle (radians)
 Dmax =(lambda/dTheta)*sqrt(2*sensor.R0/lambda);
 % position of point target
 xt = .25; % greater than max allowable diameter
-yt = .25;
+yt = 1;
 % xt = -0.1+(Dmax/2)/sqrt(2); % easily within max allowable diameter
 % yt = (Dmax/2)/sqrt(2);
 zt = 0;
@@ -55,10 +54,7 @@ ones(1,data.Np)*sensor.elev*pi/180,ones(1,data.Np)*sensor.R0);
 figure(1)
 plot(data.AntX, data.AntY);
 hold on 
-plot(targPos(1,1), targPos(1,2), '*g');
-hold on
-plot(targPos(2,1), targPos(2,2), '*r');
-hold off
+plot(targetPos(1,1), targetPos(,2
 
 pause(0.1)
 h = waitbar(0,'Calculate data from point targets...');
@@ -95,10 +91,10 @@ data.minF = data.freq(1) * ones(size(data.AntX));
 % SAR image formation using Polar Format Algorithm (PFA)
 data = polarFormatAlgorithm(data);
 % Display the SAR iamge
-figure(2)
+figure(1)
 imagesc(data.xaxis,data.yaxis,20*log10(abs(data.im_final_PFA)./...
 max(max(abs(data.im_final_PFA)))))
-caxis([-30 0])
+caxis([-50 0])
 axis xy
 title('PFA Image');
 xlabel('x (m)');

@@ -1,6 +1,6 @@
 c = physconst('LightSpeed');
 
-fc = 4e9;
+fc = 7.29e9;
 
 rangeResolution = 3;  
 crossRangeResolution = 3;
@@ -17,19 +17,25 @@ waveform = phased.LinearFMWaveform('SampleRate',fs, 'PulseWidth', tpd, 'PRF', pr
 
 fs = 2.332800384e10;
 
-speed = 400;  
+speed = 1; 
 flightDuration = 4;
+
+time_dur = 60;
+num_samples = 1000;
+t = 0:time_dur/(num_samples-1):time_dur;
+
+R0 = 3;
 
 % Custom Data Path 
 load('data.mat');
 load('Cylinder_in_Center_in_Motion_17-Nov-2019_14-53.mat');
-x_loc = 5*data.AntX;
-y_loc = 5*data.AntY;
-z_loc = zeros(1,676);
+x_loc = R0*cos(1/time_dur*2*pi*t);
+y_loc = R0*sin(1/time_dur*2*pi*t);
+z_loc = zeros(1,num_samples);
 
-b = [0 time_samples(1:675)];
 
-wpts = [b' x_loc' y_loc' z_loc'];
+
+wpts = [t' x_loc' y_loc' z_loc'];
 
 radarPlatform = phased.Platform('MotionModel','Custom',...
     'CustomTrajectory', wpts);
@@ -38,7 +44,7 @@ radarPlatform = phased.Platform('MotionModel','Custom',...
 
 %radarPlatform  = phased.Platform('InitialPosition', [0;-800;0], 'Velocity', [0; speed; 0]);
 slowTime = 1/prf;
-numpulses = 676;
+numpulses = 1000;
 
 maxRange = 9.9;
 truncrangesamples = ceil((2*maxRange/c)*fs);
@@ -60,7 +66,7 @@ receiver = phased.ReceiverPreamp('SampleRate', fs, 'NoiseFigure', 30);
 channel = phased.FreeSpace('PropagationSpeed', c, 'OperatingFrequency', fc,'SampleRate', fs,...
     'TwoWayPropagation', true);
 
-targetpos= [0,0,0; .25,.25,0]'; 
+targetpos= [1,0,0; 1,0,0]'; 
 
 targetvel = [0,0,0; 0,0,0]';
 
@@ -71,23 +77,32 @@ pointTargets = phased.Platform('InitialPosition', targetpos,'Velocity',targetvel
 figure(1);
 h = axes;
 plot(targetpos(2,1),targetpos(1,1),'*g');
-plot(targetpos(2,2),targetpos(1,2),'*r'
+hold on;
+plot(targetpos(2,2),targetpos(1,2),'*r');
 set(h,'Ydir','reverse');
 title('Ground Truth');ylabel('Range');xlabel('Cross-Range');
 hold on;
 plot(x_loc, y_loc);
+hold off;
 
 % Define the broadside angle
 refangle = zeros(1,size(targetpos,2));
 rxsig = zeros(truncrangesamples,numpulses);
+
+
+slowTime = time_dur/num_samples;
+
+
 for ii = 1:numpulses
     % Update radar platform and target position
     [radarpos, radarvel] = radarPlatform(slowTime);
+    nn_radarpos(:,ii) = radarpos;
     [targetpos,targetvel] = pointTargets(slowTime);
     
     % Get the range and angle to the point targets
     [targetRange, targetAngle] = rangeangle(targetpos, radarpos);
     
+ 
     % Generate the LFM pulse
     sig = waveform();
     % Use only the pulse length that will cover the targets.
@@ -114,12 +129,39 @@ for ii = 1:numpulses
     % Receive the signal  
     rxsig(:,ii) = receiver(sig);
     
+    
+    
 end
-
+pause(1);
 figure(2);
 imagesc(abs(rxsig));title('SAR Raw Data')
 xlabel('Cross-Range Samples')
 ylabel('Range Samples')
 
+pulseCompression = phased.RangeResponse('RangeMethod', 'Matched filter', 'PropagationSpeed', c, 'SampleRate', fs);
+matchingCoeff = getMatchedFilter(waveform);
+[cdata, rnggrid] = pulseCompression(rxsig, matchingCoeff);
+pause(1);
+figure(3);
+imagesc(real(cdata));
+title('SAR Range Compressed Data')
+xlabel('Cross-Range Samples')
+ylabel('Range Samples')
 
+pause(1);
+figure(4);
+load('data.mat');
+data2 = data;
+data2.phdata = cdata;
+data2 = polarFormatAlgorithm(data2);
+imagesc(20*log10(abs(data2.im_final_PFA./max(max(abs(data2.im_final_PFA))))))
+caxis([-8 0])
+
+pause(1);
+figure(5);
+data2 = data;
+data2.phata = rxsig;
+data2 = polarFormatAlgorithm(data2);
+imagesc(20*log10(abs(data2.im_final_PFA./max(max(abs(data2.im_final_PFA))))))
+caxis([-8 0])
 

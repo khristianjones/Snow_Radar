@@ -16,8 +16,10 @@ sdata =fftshift(fft(fftshift(fft(sigData,[],1),1),[],2),2);
 fsmPol = (sdata.').*kFinal;
 
 stoltPol = fsmPol;
+
 for i = 1:size((fsmPol),1)
-    stoltPol(i,:) = interp1(kx(i,:),fsmPol(i,:),krange(1,:));
+    [x, index] = unique(kx(i,:));
+    stoltPol(i,:) = interp1(x,fsmPol(index,:),krange(i,:));
 end
 stoltPol(isnan(stoltPol)) = 1e-30;
 

@@ -1,22 +1,36 @@
 % Scenario Viewer Matlab Demo
 
-updateRate = 0.1;
-radarPlatform = phased.Platform(...
-    'InitialPosition',[0;0;10], ...
-    'Velocity',[0;0;0]);
-airplanePlatforms = phased.Platform(...
-    'InitialPosition',[5000.0;3500.0;6000.0],...
-    'Velocity',[-300;0;0]);
+updateRate = 1;
 
-sSV = phased.ScenarioViewer('BeamRange',5000.0,'UpdateRate',updateRate,...
-    'PlatformNames',{'Ground Radar','Airplane'},'ShowPosition',true,...
+
+x_loc = 1*data.AntX;
+y_loc = 1*data.AntY;
+z_loc = zeros(1,676);
+
+b = [0 time_samples(1:675)];
+
+wpts = [b' x_loc' y_loc' z_loc'];
+
+radarPlatform = phased.Platform('MotionModel','Custom',...
+    'CustomTrajectory', wpts);
+
+
+airplanePlatforms = phased.Platform(...
+    'InitialPosition',[0;0;0],...
+    'Velocity',[0;0;0]);
+
+sSV = phased.ScenarioViewer('BeamRange',10.0,'UpdateRate',updateRate,...
+    'PlatformNames',{'Radarr','Points'},'ShowPosition',true,...
     'ShowSpeed',true,'ShowAltitude',true,'ShowLegend',true);
 
+slowTime = 0.2;
+
+
 for i = 1:100
-    [radar_pos,radar_vel] = step(radarPlatform,updateRate);
-    [tgt_pos,tgt_vel] = step(airplanePlatforms,updateRate);
+    [radar_pos,radar_vel] = radarPlatform(slowTime);
+    [tgt_pos,tgt_vel] = airplanePlatforms(slowTime);
     [rng,ang] = rangeangle(tgt_pos,radar_pos);
-    sSV.BeamSteering = ang;
+    
     step(sSV,radar_pos,radar_vel,tgt_pos,tgt_vel);
     pause(0.1);
 end
