@@ -14,13 +14,16 @@ sensor.BW = 8e8;
 % Bandwidth (Hz)
 sensor.Fc = 10e9;
 % Center freq (Hz)
-sensor.int_angle = 1;
+sensor.int_angle = 360;
 % Integration Angle (degrees)
+
 sensor.cent_angle = 0;
 % Center Angle (degrees)
-sensor.elev = 45;
+sensor.elev = 0;
 % Elevation Angle (degrees)
-sensor.R0 = 10e3;
+
+sensor.R0 = 10;
+
 % Range to sensor (m) from aimpoint at scene center
 data.K = 2048;
 % Number of frequency samples
@@ -31,13 +34,13 @@ lambda = c/sensor.Fc; % wavelength
 dTheta = (pi/180)*sensor.int_angle; % integration angle (radians)
 Dmax =(lambda/dTheta)*sqrt(2*sensor.R0/lambda);
 % position of point target
-xt = 1.5*Dmax/sqrt(2); % greater than max allowable diameter
-yt = 1.5*Dmax/sqrt(2);
+xt = .25; % greater than max allowable diameter
+yt = .25;
 % xt = -0.1+(Dmax/2)/sqrt(2); % easily within max allowable diameter
 % yt = (Dmax/2)/sqrt(2);
 zt = 0;
-targPos = [xt yt zt];
-amp = 1; % unit reflectance amplitude
+targPos = [xt yt zt; xt*2, yt*2, zt];
+amp = [1 1]; % unit reflectance amplitude
 N_targets = size(targPos,1); % number of point targets
 % Calculate the frequency vector (Hz)
 data.freq = linspace(sensor.Fc-sensor.BW/2,sensor.Fc+sensor.BW/2,data.K)';
@@ -49,6 +52,14 @@ sensor.cent_angle+sensor.int_angle/2,data.Np);
 ones(1,data.Np)*sensor.elev*pi/180,ones(1,data.Np)*sensor.R0);
 % Loop through each pulse to calculate the phase history data from the
 % point target
+figure(1)
+plot(data.AntX, data.AntY);
+hold on 
+plot(targPos(1,1), targPos(1,2), '*g');
+hold on
+plot(targPos(2,1), targPos(2,2), '*r');
+hold off
+
 pause(0.1)
 h = waitbar(0,'Calculate data from point targets...');
 data.phdata = zeros(data.K,data.Np);
@@ -84,10 +95,10 @@ data.minF = data.freq(1) * ones(size(data.AntX));
 % SAR image formation using Polar Format Algorithm (PFA)
 data = polarFormatAlgorithm(data);
 % Display the SAR iamge
-figure,imagesc(data.xaxis,data.yaxis,20*log10(abs(data.im_final_PFA)./...
+figure(2)
+imagesc(data.xaxis,data.yaxis,20*log10(abs(data.im_final_PFA)./...
 max(max(abs(data.im_final_PFA)))))
-caxis([-25 0])
-colormap(flipud(gray))
+caxis([-30 0])
 axis xy
 title('PFA Image');
 xlabel('x (m)');
@@ -97,4 +108,4 @@ set(gcf,'color','w')
 % Overlay colored lines and circles that provide a graphical
 % representation of far-field approximation that can be used to predict the
 % warping and defocussing of a SAR image computed using PFA
-graphicalDemoFarFieldPfa(data.AntX,data.AntY,data.AntZ,xt,yt,zt);
+%graphicalDemoFarFieldPfa(data.AntX,data.AntY,data.AntZ,xt,yt,zt);
