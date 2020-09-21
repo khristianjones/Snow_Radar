@@ -28,6 +28,10 @@ c = 2.9979e8;                       % speed of light
 % bw, at bwr dB down from normalized peak, with instanteous output 
 % amplitude vp volts, with a frame size of n
 [fc, bw, bwr, vp, frameSize, ~, ~, fs_hz] = NoveldaChipParams(chipSet, PGen, Sampler);
+fc
+bw
+bwr
+vp
 
 % Sampling Rate
 if ischar(Sampler)

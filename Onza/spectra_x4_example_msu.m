@@ -26,10 +26,10 @@ bufferLen = 100;
 % DDC_Flag = true;
 DDC_Flag = false;
 
- %matFileSave = true;
-matFileSave = false;
+matFileSave = true;
+%matFileSave = false;
 
- matfilename = 'Cylinder_in_Center_in_Motion_';
+ matfilename = 'Callibration_Plate_at_143cm_0deg';
 
 pause(1);
 % -------------------------------------------------------------------------

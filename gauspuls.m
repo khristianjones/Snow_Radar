@@ -26,5 +26,7 @@ function y = gauspuls(t, fc, bw, bwr)
 
   fv = -(bw.^2.*fc.^2)/(8.*log(10.^(-bwr/20)));
   tv = 1/(4.*pi.^2.*fv); 
+  b = cos(2.*pi.*fc.*t);
   y = exp(-t.*t/(2.*tv)).*cos(2.*pi.*fc.*t);
+  plot(t,y);
 end

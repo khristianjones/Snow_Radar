@@ -8,9 +8,9 @@ sensor.int_angle = 6;
 % Integration Angle (degrees)
 sensor.cent_angle = 0;
 % Center Angle (degrees)
-sensor.elev = 15;
+sensor.elev = 0;
 % Elevation Angle (degrees)
-sensor.R0 = 10e3;
+sensor.R0 = 10e2;
 % Range to sensor (m) from aimpoint at scene center
 data.K = 2048;
 % Number of frequency samples
@@ -21,8 +21,8 @@ lambda = c/sensor.Fc; % wavelength
 dTheta = (pi/180)*sensor.int_angle; % integration angle (radians)
 Dmax =(lambda/dTheta)*sqrt(2*sensor.R0/lambda);
 % position of point target
-xt = 1.5*Dmax/sqrt(2); % greater than max allowable diameter
-yt = 1.5*Dmax/sqrt(2);
+xt = 100; % greater than max allowable diameter
+yt = 10;
 % xt = -0.1+(Dmax/2)/sqrt(2); % easily within max allowable diameter
 % yt = (Dmax/2)/sqrt(2);
 zt = 0;
@@ -71,12 +71,12 @@ data.deltaF = diff(data.freq(1:2));
 % Calculate the minimum frequency (Hz)
 data.minF = data.freq(1) * ones(size(data.AntX));
 % SAR image formation using Polar Format Algorithm (PFA)
+
 data = polarFormatAlgorithm(data);
 % Display the SAR iamge
 figure,imagesc(data.xaxis,data.yaxis,20*log10(abs(data.im_final_PFA)./...
 max(max(abs(data.im_final_PFA)))))
-caxis([-25 0])
-colormap(flipud(gray))
+
 axis xy
 title('PFA Image');
 xlabel('x (m)');

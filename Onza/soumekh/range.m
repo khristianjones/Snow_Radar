@@ -138,22 +138,24 @@ sb=s.*exp(-cj*wc*t);
 sb0=s0.*exp(-cj*wc*t);
 
 %
+figure()
 plot(t,real(sb))
 xlabel('Time, sec')
 ylabel('Real Part')
 title('Baseband Echoed Signal')
 axis('square')
 axis([Ts Tf 1.1*min(real(sb)) 1.1*max(real(sb))])
-print P1.1a.ps
+savefig('P1.1a.fig')
 pause(1)
 %
+figure();
 plot(t,real(sb0))
 xlabel('Time, sec')
 ylabel('Real Part')
 title('Baseband Reference Echoed Signal')
 axis('square')
 axis([Ts Tf 1.1*min(real(sb0)) 1.1*max(real(sb0))])
-print P1.2a.ps
+savefig('P1.2a.fig')
 pause(1)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,32 +182,35 @@ fsb0(I)=((amp_max*(P_max^2)*ones(1,nI))./afsb0(I)).* ...
 %
 E=sum(mag.*abs(fsb0));
 %
+figure()
 plot((w-wc)/pi2,abs(fsb))
 xlabel('Frequency, Hertz')
 ylabel('Magnitude')
 title('Baseband Echoed Signal Spectrum')
 axis('square')
-print P1.3a.ps
+savefig('P1.3a.fig')
 pause(1)
 %
+figure()
 plot((w-wc)/pi2,abs(fsb0))
 xlabel('Frequency, Hertz')
 ylabel('Magnitude')
 title('Baseband Reference Echoed Signal Spectrum')
 axis('square')
-print P1.4a.ps
+savefig('P1.4a.fig')
 pause(1)
 %
 % Matched Filtering
 %
 fsmb=fsb.*conj(fsb0);
 %
+figure()
 plot((w-wc)/pi2,abs(fsmb))
 xlabel('Frequency, Hertz')
 ylabel('Magnitude')
 title('Baseband Matched Filtered Signal Spectrum')
 axis('square')
-print P1.5a.ps
+savefig('P1.5a.fig')
 pause(1)
 %
 % Inverse Fourier Transform
@@ -214,12 +219,13 @@ smb=ifty(fsmb);       % Matched filtered signal (range reconstruction)
 %
 % Display
 %
+figure()
 plot(x,(n/E)*abs(smb))
 xlabel('Range, meters')
 ylabel('Magnitude')
 title('Range Reconstruction Via Matched Filtering')
 axis([Xc-X0 Xc+X0 0 1.1]); axis('square')
-print P1.6a.ps
+savefig('P1.6a.fig')
 pause(1)
 
 %

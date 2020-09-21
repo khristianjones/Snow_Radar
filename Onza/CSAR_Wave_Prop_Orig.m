@@ -2,9 +2,9 @@ c = physconst('LightSpeed');
 
 fc = 7.29e9;
 
-rangeResolution = 3;  
-crossRangeResolution = 3;
-
+rangeResolution = 6.6e-2;  
+crossRangeResolution = 6.6e-2;
+ 
 bw = c/(2*rangeResolution);
 
 prf = 1000; 
@@ -15,6 +15,8 @@ fs = 120*10^6;
 waveform = phased.LinearFMWaveform('SampleRate',fs, 'PulseWidth', tpd, 'PRF', prf,...
     'SweepBandwidth', bw);
 
+
+    
 fs = 2.332800384e10;
 
 speed = 1; 
@@ -41,18 +43,13 @@ radarPlatform = phased.Platform('MotionModel','Custom',...
     'CustomTrajectory', wpts);
 
 
-
-%radarPlatform  = phased.Platform('InitialPosition', [0;-800;0], 'Velocity', [0; speed; 0]);
-slowTime = 1/prf;
 numpulses = 1000;
 
-maxRange = 9.9;
-truncrangesamples = ceil((2*maxRange/c)*fs);
 % todo repalce truncrangesamples
 truncrangesamples = 1536; 
 fastTime = (0:1/fs:(truncrangesamples-1)/fs);
 % Set the reference range for the cross-range processing.
-Rc = 25;
+Rc = 0;
 
 antenna = phased.CosineAntennaElement('FrequencyRange', [1e9 11e9]);
 antennaGain = aperture2gain(aperture,c/fc); 
@@ -65,26 +62,33 @@ receiver = phased.ReceiverPreamp('SampleRate', fs, 'NoiseFigure', 30);
 
 channel = phased.FreeSpace('PropagationSpeed', c, 'OperatingFrequency', fc,'SampleRate', fs,...
     'TwoWayPropagation', true);
+%% 
+targetpos= [0,0,0; 0,1,0; 0,2,0; 0.4,0.5,0; 0.4,0.45,0; .25,1.25,0]'; 
 
-targetpos= [1,0,0; 1,0,0]'; 
+targetvel = [0,0,0; 0,0,0; 0,0,0; 0,0,0; 0,0,0; 0,0,0]';
 
-targetvel = [0,0,0; 0,0,0]';
 
-target = phased.RadarTarget('OperatingFrequency', fc, 'MeanRCS', [1,1]);
+
+target = phased.RadarTarget('OperatingFrequency', fc, 'MeanRCS', [1,1,1,1,1,1]);
 pointTargets = phased.Platform('InitialPosition', targetpos,'Velocity',targetvel);
+%
 % The figure below describes the ground truth based on the target
 % locations.
 figure(1);
 h = axes;
-plot(targetpos(2,1),targetpos(1,1),'*g');
+for i = 1:size(targetpos,2)
+ plot(targetpos(2,i),targetpos(1,i),'*g');
 hold on;
-plot(targetpos(2,2),targetpos(1,2),'*r');
+end
 set(h,'Ydir','reverse');
-title('Ground Truth');ylabel('Range');xlabel('Cross-Range');
+title('Ground Truth');
+ylabel('Range');
+xlabel('Cross-Range');
+
 hold on;
 plot(x_loc, y_loc);
 hold off;
-
+%% 
 % Define the broadside angle
 refangle = zeros(1,size(targetpos,2));
 rxsig = zeros(truncrangesamples,numpulses);
@@ -144,33 +148,13 @@ matchingCoeff = getMatchedFilter(waveform);
 [cdata, rnggrid] = pulseCompression(rxsig, matchingCoeff);
 pause(1);
 figure(3);
-imagesc(real(cdata));
+imagesc(abs(cdata));
 title('SAR Range Compressed Data')
 xlabel('Cross-Range Samples')
 ylabel('Range Samples')
 
-pause(1);
-figure(4);
-load('data.mat');
-
-demo_data.AntX = x_loc;
-demo_data.AntY = y_loc;
-demo_data.theta = t*2*pi;
-demo_data.AntZ = z_loc;
-demo_data.Np = numpulses;
+%% 
+bpa_processed = helperBackProjection(cdata,rnggrid,fastTime,fc,fs,prf,speed,crossRangeResolution,c);
 
 
-
-data2.phdata = cdata;
-data2 = polarFormatAlgorithm(data2);
-imagesc(20*log10(abs(data2.im_final_PFA./max(max(abs(data2.im_final_PFA))))))
-caxis([-8 0])
-
-pause(1);
-figure(5);
-data2 = data;
-data2.phata = rxsig;
-data2 = polarFormatAlgorithm(data2);
-imagesc(20*log10(abs(data2.im_final_PFA./max(max(abs(data2.im_final_PFA))))))
-caxis([-8 0])
 

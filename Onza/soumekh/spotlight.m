@@ -1,4 +1,4 @@
-l
+
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    %   PULSED SPOTLIGHT SAR SIMULATION AND RECONSTRUCTION   %
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,6 +163,7 @@ s=s.*exp(-cj*wc*t(:)*ones(1,mc));      % Fast-time baseband conversion
 
 G=abs(s)';
 xg=max(max(G)); ng=min(min(G)); cg=255/(xg-ng);
+
 image(t,uc,256-cg*(G-ng));
 axis('square');axis('xy')
 xlabel('Fast-time t, sec')
@@ -186,7 +187,7 @@ axis('square');axis('xy')
 xlabel('Fast-time t, sec')
 ylabel('Synthetic Aperture (Slow-time) U, meters')
 title('SAR Signal after Fast-time Matched Filtering')
-print P5.2.ps
+% print P5.2.ps
 pause(1)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -208,7 +209,7 @@ axis('square');axis('xy')
 xlabel('Fast-time Frequency, Hertz')
 ylabel('Synthetic Aperture (Slow-time) Frequency Ku, rad/m')
 title('Aliased Spotlight SAR Signal Spectrum')
-print P5.3.ps
+% print P5.3.ps
 pause(1)
 
 %
@@ -530,7 +531,7 @@ title('TDC Spotlight SAR Reconstruction Spectrum')
 print P5.14.ps
 pause(1)
 
-
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%           BACKPROJECTION RECONSTRUCTION         %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
