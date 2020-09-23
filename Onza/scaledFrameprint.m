@@ -1,5 +1,6 @@
 for i = 1:1000;
-    plot(scaledFrame(:,i));
+    hold on
+    plot(abs(deg45(:,i)),'b');
+    plot(abs(deg0(:,i)),'r');
     drawnow;
-    pause(0.1);
 end
