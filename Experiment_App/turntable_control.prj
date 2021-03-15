@@ -1,0 +1,60 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="2734689483" file="C:\Users\Khristian\OneDrive\Documents\Repos\Snow_Radar\Experiment_App\turntable_control.prj" location="C:\Users\Khristian\OneDrive\Documents\Repos\Snow_Radar\Experiment_App" name="turntable_control" target="target.mlapps" target-name="Package App">
+    <param.appname>turntable_control</param.appname>
+    <param.authnamewatermark>Khristian Jones</param.authnamewatermark>
+    <param.email>jones.khristian26@gmail.com</param.email>
+    <param.company>Montana State University</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>A test app to control the stepper motor for CSAR research at Montana State Univesity</param.summary>
+    <param.description />
+    <param.screenshot>C:\Users\Khristian\AppData\Local\Temp\tpea4680e9_901e_46c3_916f_7dfd80f06150.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>d1ce3656-6fae-4432-9f3f-dfd72854d04b</param.guid>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.description />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\app1.mlapp</file>
+    </fileset.main>
+    <fileset.depfun />
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\Khristian\OneDrive\Documents\Repos\Snow_Radar" name="Experiment_App" optional="false">C:\Users\Khristian\OneDrive\Documents\Repos\Snow_Radar\Experiment_App</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2020b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

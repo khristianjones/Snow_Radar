@@ -29,7 +29,7 @@ DDC_Flag = false;
 matFileSave = true;
 %matFileSave = false;
 
- matfilename = 'Callibration_Plate_at_143cm_0deg';
+matfilename = 'Callibration_Plate_at_143cm_0deg';
 
 pause(1);
 % -------------------------------------------------------------------------

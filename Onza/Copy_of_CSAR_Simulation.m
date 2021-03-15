@@ -66,10 +66,11 @@ ntarget=4;                        % number of targets
  %% Backprojection 
  
  
-filename = "Corner_Reflector_0_deg_var_R_178cmto185cm.gif" 
- 
+filename = "Snow_Melted_Refrozen_0_deg_R_1815_at_top.gif" 
+
 c = physconst('LightSpeed');
 
+max_amplitude =0;
 
 fs = 7.29e9;
 
@@ -79,7 +80,7 @@ ncr = find(time_samples>60,1)
 
  % number of cross range samples (slow time track)  
 
-offset = 0;
+offset = 525;
 theta_range = time_samples(1:ncr)*pi/30;
 
 theta_range = circshift(theta_range,offset);
@@ -88,24 +89,26 @@ dd = scaledFrame;
 
 
 
-ftres = 150   % fast Time res
-stres = 150   % slow Time res 
+ftres = 200  % fast Time res
+stres = 200   % slow Time res 
 
 data = zeros(ftres,stres);
 
-R0 = 1.83 % radius from radar front to center of turntable 
+R0 = 1.815 % radius from radar front to center of turntable 
 fracR0 = .25 % fraction of radar return interested in, measured from center of radius
-height = 0;
+height = .9;
 
-rd = R0-.05:.005:R0+.02;
-zd = 0;
+rd = R0;
+zd = .9;
 
-
-d = 0
+clear M;
+clear N;
+ 
+d = 4
 max_cell = 0;
 min_cell = 1000;
-for rd_index = 1:size(rd,2);
-for zd_index = 1:size(zd,2);
+for rd_index = 1:size(rd,2)
+for zd_index = 1:size(zd,2)
     
 id = linspace(-rd(rd_index)*fracR0,rd(rd_index)*fracR0,ftres);
 jd = linspace(-rd(rd_index)*fracR0,rd(rd_index)*fracR0,stres);
@@ -139,17 +142,23 @@ end
 
 h = figure;
 %image = imagesc(abs(data));
-image = imagesc(20*log10(data./max(max(data))));
-caxis([-3.5 0]);
+%if max(max(data)) > max_amplitude
+%    max_amplitude = max(max(data));
+%end
+%scaledData = 20*log10(data./max(max(data)));
+image = imagesc(scaledData);
+caxis([-3 0]);
 xticks(linspace(1,ftres,7));
 xticklabels([linspace(id(1),id(end),7)]);
 yticks(linspace(1,stres,7));
 yticklabels([linspace(jd(1),jd(end),7)]);
-xlabel('Range (m)');
-ylabel('Cross-Range (m)');
-title({['Backprojection Reconstruction ',num2str(ftres),'x',num2str(stres), 'Resolution']...
+xlabel('X Range (m)');
+ylabel('Y Cross-Range (m)');
+title({['Snow Melted then Refrozen @ 0 deg']...
+    ['Backprojection Reconstruction,',num2str(ftres),'x',num2str(stres), ' Resolution']...
     [' Height @ Z = ' num2str(zd(zd_index)), ' meters'] ...
-    ['Radius @ R = ', num2str(rd(rd_index))]})
+    ['Radius @ R = ', num2str(rd(rd_index)),  ' meters'] ...
+    [ 'Number of Pixels above -3db = ', num2str(length(find(scaledData>=-3))), ' Pixels']})
 drawnow
 % gif creation 
 getframe(h);
@@ -161,5 +170,7 @@ if (zd_index == 1 && rd_index == 1)
       else 
           imwrite(imind,cm,filename,'gif','WriteMode','append'); 
 end 
+M(:,:,zd_index) = abs(data);
+N(:,:,zd_index) = scaledData;
 end
 end
