@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <headerType>gui</headerType>
+  <dontWrapJar>true</dontWrapJar>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <outfile>/home/khristian/Desktop/Snow_Radar/TURNTABLE/GUI_Processor_V2/application.windows32/GUI_Processor_V2.exe</outfile>
+  <icon>/home/khristian/processing-3.5.3/modes/java/application/sketch.ico</icon>
+  <classPath>
+    <mainClass>GUI_Processor_V2</mainClass>
+    <cp>lib/GUI_Processor_V2.jar</cp>
+    <cp>lib/core.jar</cp>
+    <cp>lib/jogl-all.jar</cp>
+    <cp>lib/gluegen-rt.jar</cp>
+    <cp>lib/jogl-all-natives-windows-i586.jar</cp>
+    <cp>lib/gluegen-rt-natives-windows-i586.jar</cp>
+    <cp>lib/controlP5.jar</cp>
+    <cp>lib/jssc.jar</cp>
+    <cp>lib/serial.jar</cp>
+  </classPath>
+  <jre>
+    <minVersion>1.8.0_74</minVersion>
+    <opt>-Djna.nosys=true</opt>
+    <opt>-Djava.library.path="%EXEDIR%\lib"</opt>
+  </jre>
+</launch4jConfig>

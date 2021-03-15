@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <target name="windows">
+    <taskdef classname="net.sf.launch4j.ant.Launch4jTask" classpath="/home/khristian/processing-3.5.3/modes/java/application/launch4j/launch4j.jar:/home/khristian/processing-3.5.3/modes/java/application/launch4j/lib/xstream.jar" name="launch4j"/>
+    <launch4j configFile="/home/khristian/Desktop/Snow_Radar/TURNTABLE/GUI_Processor_V2/application.windows32/launch4j-config.xml"/>
+  </target>
+</project>
